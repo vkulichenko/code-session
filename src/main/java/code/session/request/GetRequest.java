@@ -15,20 +15,19 @@
  * limitations under the License.
  */
 
-package code.session;
+package code.session.request;
 
-public class Server {
-    private final Communication comm = new Communication();
+import code.session.Storage;
 
-    private final Storage storage = new Storage();
+public class GetRequest implements Request<String> {
+    private final String key;
 
-    public void start() throws Exception {
-        comm.start();
-
-        comm.listen(storage);
+    public GetRequest(String key) {
+        this.key = key;
     }
 
-    public static void main(String[] args) throws Exception {
-        new Server().start();
+    @Override
+    public String handle(Storage storage) {
+        return storage.get(key);
     }
 }

@@ -17,11 +17,17 @@
 
 package code.session;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class Storage {
+    private final Map<String, String> data = new ConcurrentHashMap<>();
+
     public void put(String key, String value) {
+        data.put(key, value);
     }
 
     public String get(String key) {
-        return null;
+        return data.get(key);
     }
 }

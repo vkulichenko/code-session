@@ -17,15 +17,21 @@
 
 package code.session;
 
+import java.net.InetSocketAddress;
+import code.session.request.GetRequest;
+import code.session.request.PutRequest;
+
 public class Client {
+    private final Communication comm = new Communication();
 
     public void start() throws Exception {
     }
 
     public void put(String key, String value) throws Exception {
+        comm.execute(new PutRequest(key, value), new InetSocketAddress("127.0.0.1", 4000));
     }
 
     public String get(String key) throws Exception {
-        return null;
+        return comm.execute(new GetRequest(key), new InetSocketAddress("127.0.0.1", 4000));
     }
 }
