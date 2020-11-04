@@ -20,6 +20,8 @@ package code.session;
 import java.util.List;
 
 public class Mapper {
+    private static final int PARTITIONS = 10;
+
     private final Discovery discovery;
 
     public Mapper(Discovery discovery) {
@@ -27,28 +29,26 @@ public class Mapper {
     }
 
     public Discovery.Node node(String key) {
-        List<Discovery.Node> topology = discovery.getTopology();
-
-        int idx = Math.abs(key.hashCode()) % topology.size();
-
-        return topology.get(idx);
+        return node(partition(key));
     }
 
-//    public int partition(String key) {
-//        return 0;
-//    }
-//
-//    public Discovery.Node node(int partition) {
-//        return null;
-//    }
-//
-//    public Discovery.Node[] partitionMapping() {
-//        Discovery.Node[] mapping = new Discovery.Node[PARTITIONS];
-//
-//        for (int partition = 0; partition < PARTITIONS; partition++) {
-//            mapping[partition] = node(partition);
-//        }
-//
-//        return mapping;
-//    }
+    public int partition(String key) {
+        return Math.abs(key.hashCode()) % PARTITIONS;
+    }
+
+    public Discovery.Node node(int partition) {
+        List<Discovery.Node> topology = discovery.getTopology();
+
+        return topology.get(partition % topology.size());
+    }
+
+    public Discovery.Node[] partitionMapping() {
+        Discovery.Node[] mapping = new Discovery.Node[PARTITIONS];
+
+        for (int partition = 0; partition < PARTITIONS; partition++) {
+            mapping[partition] = node(partition);
+        }
+
+        return mapping;
+    }
 }
