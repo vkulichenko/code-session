@@ -18,7 +18,6 @@
 package code.session;
 
 public class Client {
-
     public void start() throws Exception {
     }
 
