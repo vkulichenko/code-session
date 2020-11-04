@@ -21,4 +21,22 @@ public class Mapper {
     public Discovery.Node node(String key) {
         return null;
     }
+
+//    public int partition(String key) {
+//        return 0;
+//    }
+//
+//    public Discovery.Node node(int partition) {
+//        return null;
+//    }
+//
+//    public Discovery.Node[] partitionMapping() {
+//        Discovery.Node[] mapping = new Discovery.Node[PARTITIONS];
+//
+//        for (int partition = 0; partition < PARTITIONS; partition++) {
+//            mapping[partition] = node(partition);
+//        }
+//
+//        return mapping;
+//    }
 }
