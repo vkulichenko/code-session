@@ -30,4 +30,30 @@ public class Storage {
     public String get(String key) {
         return data.get(key);
     }
+
+//    public void remap() {
+//        Discovery.Node[] mapping = mapper.partitionMapping();
+//
+//        for (int partition = 0; partition < mapping.length; partition++) {
+//            Discovery.Node node = mapping[partition];
+//
+//            if (node.getId().equals(localId)) {
+//                data.putIfAbsent(partition, new ConcurrentHashMap<>());
+//            }
+//            else {
+//                Map<String, String> partitionData = data.remove(partition);
+//
+//                if (partitionData != null) {
+//                    try {
+//                        comm.execute(new RebalanceRequest(partition, partitionData), node.getAddress());
+//                    }
+//                    catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//
+//        System.out.println("Remapping completed.");
+//    }
 }
