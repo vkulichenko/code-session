@@ -33,4 +33,22 @@ public class Mapper {
 
         return topology.get(idx);
     }
+
+//    public int partition(String key) {
+//        return 0;
+//    }
+//
+//    public Discovery.Node node(int partition) {
+//        return null;
+//    }
+//
+//    public Discovery.Node[] partitionMapping() {
+//        Discovery.Node[] mapping = new Discovery.Node[PARTITIONS];
+//
+//        for (int partition = 0; partition < PARTITIONS; partition++) {
+//            mapping[partition] = node(partition);
+//        }
+//
+//        return mapping;
+//    }
 }
