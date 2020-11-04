@@ -24,7 +24,10 @@ import code.session.request.PutRequest;
 public class Client {
     private final Communication comm = new Communication();
 
+    private final Discovery discovery = new Discovery();
+
     public void start() throws Exception {
+        discovery.join(null, null);
     }
 
     public void put(String key, String value) throws Exception {

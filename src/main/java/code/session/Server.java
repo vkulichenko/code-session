@@ -17,13 +17,21 @@
 
 package code.session;
 
+import java.util.UUID;
+
 public class Server {
+    private final UUID id = UUID.randomUUID();
+
     private final Communication comm = new Communication();
+
+    private final Discovery discovery = new Discovery();
 
     private final Storage storage = new Storage();
 
     public void start() throws Exception {
-        comm.start();
+        int port = comm.start();
+
+        discovery.join(id, port);
 
         comm.listen(storage);
     }
