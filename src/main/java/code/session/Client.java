@@ -17,7 +17,6 @@
 
 package code.session;
 
-import java.net.InetSocketAddress;
 import code.session.request.GetRequest;
 import code.session.request.PutRequest;
 
@@ -26,15 +25,17 @@ public class Client {
 
     private final Discovery discovery = new Discovery();
 
+    private final Mapper mapper = new Mapper(discovery);
+
     public void start() throws Exception {
         discovery.join(null, null);
     }
 
     public void put(String key, String value) throws Exception {
-        comm.execute(new PutRequest(key, value), new InetSocketAddress("127.0.0.1", 4000));
+        comm.execute(new PutRequest(key, value), mapper.node(key).getAddress());
     }
 
     public String get(String key) throws Exception {
-        return comm.execute(new GetRequest(key), new InetSocketAddress("127.0.0.1", 4000));
+        return comm.execute(new GetRequest(key), mapper.node(key).getAddress());
     }
 }
