@@ -17,9 +17,21 @@
 
 package code.session;
 
+import java.util.List;
+
 public class Mapper {
+    private final Discovery discovery;
+
+    public Mapper(Discovery discovery) {
+        this.discovery = discovery;
+    }
+
     public Discovery.Node node(String key) {
-        return null;
+        List<Discovery.Node> nodes = discovery.getTopology();
+
+        int idx = Math.abs(key.hashCode()) % nodes.size();
+
+        return nodes.get(idx);
     }
 
 //    public int partition(String key) {

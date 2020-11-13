@@ -17,12 +17,23 @@
 
 package code.session;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class Storage {
+
+    private final Map<String, String> storage =  new ConcurrentHashMap<>();
+
     public void put(String key, String value) {
+        System.out.println("Storage: put new record: " + key + ", " + value);
+
+        storage.put(key, value);
     }
 
     public String get(String key) {
-        return null;
+        System.out.println("Storage: record requested " + key);
+
+        return storage.get(key);
     }
 
 //    public void remap() {

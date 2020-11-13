@@ -17,14 +17,44 @@
 
 package code.session;
 
+import code.session.request.GetRequest;
+import code.session.request.PutRequest;
+import java.net.InetSocketAddress;
+
 public class Client {
+    private Communication comm = new Communication();
+
+    private Discovery discovery = new Discovery();
+
+    private Mapper mapper = new Mapper(discovery);
+
     public void start() throws Exception {
+        discovery.join(null, null);
     }
 
     public void put(String key, String value) throws Exception {
+        comm.execute(new PutRequest(key, value), mapper.node(key).getAddress());
     }
 
     public String get(String key) throws Exception {
-        return null;
+        return comm.execute(new GetRequest(key), mapper.node(key).getAddress());
+    }
+
+    public static void main(String[] args) {
+        try {
+            Client client = new Client();
+            client.start();
+
+            for (int i = 0; i < 10; i++) {
+                String key = Integer.toString(i);
+
+                client.put(key, "Hello " + i);
+                System.out.println("read:" + client.get(key));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
