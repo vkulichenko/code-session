@@ -64,8 +64,6 @@ public class Discovery {
         // Register this node.
         if (localId != null && localPort != null) {
             client.getKVClient().put(PREFIX_BS.concat(bs(localId)), bs(localPort)).get();
-        } else {
-            print();
         }
     }
 

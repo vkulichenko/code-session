@@ -17,69 +17,18 @@
 
 package code.session;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import code.session.request.Request;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class Communication {
-    private ServerSocket serverSocket;
-
     public int start() {
-        int port = 4000;
-
-        while (true) {
-            try {
-                serverSocket = new ServerSocket(port);
-
-                System.out.println("accepting connections on: " + port);
-
-                break;
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-                port++;
-            }
-        }
-
-        return port;
+        return 0;
     }
 
     public void listen(Storage storage) throws Exception {
-        while (true) {
-            Socket socket = serverSocket.accept();
-
-            new Thread(() -> {
-                try {
-                    ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-                    while (true) {
-                        Request request = (Request)in.readObject();
-
-                        Object result = request.handle(storage);
-
-                        out.writeObject(result);
-                    }
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
     }
 
     public <R> R execute(Request<R> request, InetSocketAddress address) throws Exception {
-        try (Socket socket = new Socket(address.getAddress(), address.getPort())) {
-
-            new ObjectOutputStream(socket.getOutputStream()).writeObject(request);
-
-            R result = (R)new ObjectInputStream(socket.getInputStream()).readObject();
-
-            return result;
-        }
+        return null;
     }
 }
