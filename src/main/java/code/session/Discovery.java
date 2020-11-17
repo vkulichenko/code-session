@@ -61,9 +61,11 @@ public class Discovery {
             }
         });
 
-        // Register this node.
+        // Register this server node.
         if (localId != null && localPort != null) {
             client.getKVClient().put(PREFIX_BS.concat(bs(localId)), bs(localPort)).get();
+        } else {
+            print();
         }
     }
 
