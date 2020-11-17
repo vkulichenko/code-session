@@ -17,18 +17,77 @@
 
 package code.session;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import code.session.request.Request;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Communication {
+    private ServerSocket serverSocket;
+
+    // Used by Servers
     public int start() {
-        return 0;
+        int port = 4000;
+
+        while (true) {
+            try {
+                serverSocket = new ServerSocket(port);
+
+                System.out.println("Server process started on: " + port);
+                break;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                port++;
+            }
+
+        }
+
+        return port;
     }
 
+    // Used by Servers
     public void listen(Storage storage) throws Exception {
+        while (true) {
+            Socket socket = serverSocket.accept();
+
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+                        Request<?> request = (Request<?>)in.readObject();
+                        Object result = request.handle(storage);
+
+                        out.writeObject(result);
+                    }
+                    catch (EOFException e1) {
+                        break;
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        break;
+                    }
+
+                }
+            }).start();
+        }
     }
 
+    // Used by Clients
     public <R> R execute(Request<R> request, InetSocketAddress address) throws Exception {
-        return null;
+        Socket socket = new Socket(address.getAddress(), address.getPort());
+
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+        out.writeObject(request);
+
+        return (R)in.readObject();
     }
 }
