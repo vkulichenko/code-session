@@ -19,7 +19,6 @@ package code.session;
 
 import code.session.request.GetRequest;
 import code.session.request.PutRequest;
-import java.net.InetSocketAddress;
 
 public class Client {
     private Communication comm = new Communication();
@@ -29,7 +28,7 @@ public class Client {
     private Mapper mapper = new Mapper(discovery);
 
     public void start() throws Exception {
-        discovery.join(null, null);
+        discovery.join(null, null, null);
     }
 
     public void put(String key, String value) throws Exception {

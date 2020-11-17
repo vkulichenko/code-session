@@ -38,7 +38,7 @@ public class Discovery {
 
     private final Map<UUID, Integer> topology = new LinkedHashMap<>();
 
-    public void join(UUID localId, Integer localPort) throws Exception {
+    public void join(UUID localId, Integer localPort, Runnable listener) throws Exception {
         Client client = Client.builder().endpoints("http://127.0.0.1:2379").build();
 
         // Get current topology.
@@ -56,6 +56,9 @@ public class Discovery {
                         add(event.getKeyValue());
                     }
                 }
+
+                if (listener != null)
+                    listener.run();
 
                 print();
             }

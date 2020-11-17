@@ -15,28 +15,25 @@
  * limitations under the License.
  */
 
-package code.session;
+package code.session.request;
 
-import java.util.UUID;
+import java.util.Map;
+import code.session.Storage;
 
-public class Server {
-    private Communication comm = new Communication();
+public class RebalanceRequest implements Request<Void> {
+    private final int partition;
 
-    private Discovery discovery = new Discovery();
+    private final Map<String, String> partitionData;
 
-    private UUID myId = UUID.randomUUID();
-
-    private Storage storage = new Storage(discovery, myId, comm);
-
-    public void start() throws Exception {
-        int port = comm.start();
-
-        discovery.join(myId, port, storage::remap);
-
-        comm.listen(storage);
+    public RebalanceRequest(int partition, Map<String, String> partitionData) {
+        this.partition = partition;
+        this.partitionData = partitionData;
     }
 
-    public static void main(String[] args) throws Exception {
-        new Server().start();
+    @Override
+    public Void handle(Storage storage) {
+        storage.onPartitionReceived(partition, partitionData);
+
+        return null;
     }
 }
