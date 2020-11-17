@@ -18,6 +18,7 @@
 package code.session;
 
 import java.util.List;
+import com.google.common.hash.Hashing;
 
 public class Mapper {
     private static final int PARTITIONS = 10;
@@ -39,9 +40,26 @@ public class Mapper {
     public Discovery.Node node(int partition) {
         List<Discovery.Node> topology = discovery.getTopology();
 
-        int idx = partition % topology.size();
+        long maxHash = Long.MIN_VALUE;
+        Discovery.Node maxHashNode = null;
 
-        return topology.get(idx);
+        for (Discovery.Node node : topology) {
+            long hash = Math.abs(
+                Hashing.murmur3_128()
+                    .newHasher()
+                    .putInt(partition)
+                    .putLong(node.getId().getLeastSignificantBits())
+                    .putLong(node.getId().getMostSignificantBits())
+                    .hash()
+                    .asLong());
+
+            if (hash > maxHash) {
+                maxHash = hash;
+                maxHashNode = node;
+            }
+        }
+
+        return maxHashNode;
     }
 
     public Discovery.Node[] partitionMapping() {
